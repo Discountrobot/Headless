@@ -54,6 +54,7 @@ if (
     return true;
 }
 ```
+
 ### Installation
 #### Chrome Extension
 read more here: [`chrome extension`](chrome extension)
