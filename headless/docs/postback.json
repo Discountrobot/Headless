@@ -1,0 +1,53 @@
+{
+    "Id": "<Some id>",
+    "UserId": 1337,
+    "Tag": "<Some tag>",
+    "RequestTime": "<Some date",
+    "StartTime": null,
+    "EndTime": null,
+    "RequestIpAddress": "<Some IP",
+    "Campaign": {
+        "Id": "<Some id>",
+        "CampaignId": 428,
+        "MediaUrl": "https://eovendocdn.blob.core.windows.net/asset-42c857b9-cd15-4061-b101-47ea…2f80b31b-cdd4-4794-920d-34ced7c71654_H264_2200kbps_AAC_und_ch2_128kbps.mp4",
+        "MediaDuration": 30,
+        "MediaType": "video/mp4",
+        "StartTime": null,
+        "EndTime": null,
+        "WebLink": "http://clk.tradedoubler.com/click?values=",
+        "ImpressionLink": null,
+        "WebLinkClicked": false,
+        "IsViewed": false,
+        "Rating": {
+            "Stars": 0,
+            "SelectedOptions": null,
+            "Comments": null
+        },
+        "Report": {
+            "Reason": null,
+            "Comments": null
+        },
+        "SharingEnabled": true,
+        "Type": {
+            "value": "Video"
+        }
+    },
+    "Settings": {
+        "IsFirst": true,
+        "IsGold": false,
+        "ResponseTimeout": 60,
+        "ResponseTimeoutCountdownTime": 15,
+        "MasterTimeout": 600,
+        "IsViewedPercentage": 15,
+        "DisplayCaptcha": false
+    },
+    "RequestDeviceType": {
+        "value": "Desktop"
+    },
+    "AdStatus": {
+        "value": "New"
+    },
+    "Type": {
+        "value": "Normal"
+    }
+}

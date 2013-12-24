@@ -1,0 +1,36 @@
+<html>
+<head>
+    <title></title>
+    <script src="popup.js"></script>
+    <style type="text/css">
+        fieldset {
+            border: none;
+            padding: 0;
+            border-bottom: 1px solid #CCC;
+            padding-bottom: 3px;
+            margin-bottom: 3px;
+            width: 230px;
+            font-size: 12px;
+            font-family: Arial;
+        }
+
+        fieldset label,
+        fieldset input {
+            display: inline;
+        }
+        fieldset input {
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <fieldset>
+        <label for="evhActive">Aktiver EovendoHeadless: </label>
+        <input type="checkbox" class="evh" name="evhActive" id="evhActive"/>
+    </fieldset>
+    <fieldset>
+        <label for="evhAutomatic">Start EovendoHeadless Automatisk:</label>
+        <input type="checkbox" class="evh" name="evhAutomatic" id="evhAutomatic"/>
+    </fieldset>
+</body>
+</html>
