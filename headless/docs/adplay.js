@@ -65,6 +65,7 @@ function initializePlayer() {
         }
     })
 }
+
 function requestAd() {
     abm = new AdBlockManager(function (n) {
         if (n) {
@@ -74,8 +75,7 @@ function requestAd() {
                 autoBuffering: !0,
                 autoPlay: !1,
                 isLoadingVideo: !1
-            },
-                i = Math.round(abm.getCampaignMediaDuration() * abm.getIsViewedPercentage() / 100) * 1e3;
+            }, i = Math.round(abm.getCampaignMediaDuration() * abm.getIsViewedPercentage() / 100) * 1e3;
             $f().onCuepoint([i], function () {
                 abm.updateCampaignIsViewed(!0), updateTracking(), campaignViewed = !0
             });
@@ -85,9 +85,11 @@ function requestAd() {
         window.console && console.log(n), $f().isFullscreen() && $f().toggleFullscreen(), alert($("#hdnUnexpectedErrorInAdPlay").val()), window.location.reload()
     })
 }
+
 function playAd(n) {
     $f().isFullscreen() ? ($f().play(n), $f().initPlay = !0, abm.updateStartTime()) : isFullWindowPlayer() ? ($f().addClip(n), $f().startBuffering()) : cancelSession()
 }
+
 function resetPlayer() {
     var n = window.location.href.indexOf("https") >= 0 ? "https:" : "http:",
         t = {
@@ -99,31 +101,39 @@ function resetPlayer() {
         };
     $f().initPlay = !1, $f().ended = !1, $f().getControls().hide(), $f().addClip(t), $f().startBuffering(), resetDialogs(), $(overlaySelector).hide(), adsAvailable ? showPlayer() : hidePlayer()
 }
+
 function resetDialogs() {
     try {
         videoEndedDialog.resetVisitWebsiteAfterSession(), rateDialog.reset(), captchaDialog.reset()
     } catch (n) {}
 }
+
 function enterFullwindowPlayer() {
     window.scrollTo(0, 0), $("body").css("overflow", "hidden"), $(".balance-dashboard-center").css("position", "static"), $(playerSelector).addClass("fullwindow"), $f().getScreen().hide(), $f().getScreen().css("width", "100%"), $f().getScreen().css("height", "100%"), $f().getScreen().show()
 }
+
 function exitFullwindowPlayer() {
     $("body").css("overflow", "auto"), $(".balance-dashboard-center").css("position", "relative"), $(playerSelector).removeClass("fullwindow"), $(playerSelector).css("height", "100%"), $f().getScreen().hide(), $f().getScreen().css("width", "1px"), $f().getScreen().css("height", "1px"), $f().getScreen().css("top", "50%"), $f().getScreen().show(), $f().getPlay().show(), autoplay = !1, abm = null, $(overlaySelector).hide()
 }
+
 function isFullWindowPlayer() {
     return $(playerSelector).hasClass("fullwindow")
 }
+
 function hidePlayer() {
-    $(playerSelector).hide()
+    $(playerSelector).hide(), $(scratchCard).show()
 }
+
 function showPlayer() {
-    $(playerSelector).show()
+    $(playerSelector).show(), $(scratchCard).hide()
 }
+
 function updateAdStatusInfo() {
     try {
         $("#spnWatchedAds").html(parseInt($("#spnWatchedAds").html()) + 1), parseInt($("#spnWatchedAds").html()) == parseInt($("#spnTotalAds").html()) && (adsAvailable = !1)
     } catch (n) {}
 }
+
 function endSession(n, t) {
     clearTimers(), $f().isPlaying() && ($f().stop(), $f().toggleFullscreen()), n == sessionStatus.completed && verifyCampaignIsViewed(), abm.updateStatus(n), abm.postAdBlock(function (n) {
         if (n.Completed) {
@@ -135,12 +145,15 @@ function endSession(n, t) {
         window.console && console.log(n), alert($("#hdnUnexpectedErrorInOnUpdate").val()), closeAllDialogs(), $(overlaySelector).hide(), t && t.adPost_Failed && t.adPost_Failed()
     }), t && t.adPost_Begin && t.adPost_Begin()
 }
+
 function cancelSession() {
     abm && (abm.updateStatus(sessionStatus.cancelled), abm.postAdBlock(), abm = null), exitFullwindowPlayer(), resetPlayer()
 }
+
 function startMasterTimer() {
     abm && (masterTimer = setTimeout("endSession(sessionStatus.timedOut);", getMasterTimeoutTime(abm.getRequestTime(), abm.getMasterTimeout())))
 }
+
 function startResponseTimer() {
     if (!responseTimer) {
         var n = abm.getResponseTimeout() * 1e3,
@@ -148,59 +161,72 @@ function startResponseTimer() {
         countdownDialogTimer = setTimeout("showTimeoutDialog();", n - t), responseTimer = setTimeout("endSession(sessionStatus.timedOut);", n), $(timeoutDialogSelector).find("#" + responseTimeoutDialog.countdownContainerId).html(t / 1e3)
     }
 }
+
 function getMasterTimeoutTime(n, t) {
     var i, r = +new Date,
         u = Date.parse(n);
     return i = t * 1e3 - (r - u), i && i != NaN || (i = t * 1e3), i
 }
+
 function timeoutCountdown() {
     var n = parseInt($(timeoutDialogSelector).find("#" + responseTimeoutDialog.countdownContainerId).html()) - 1;
     $(timeoutDialogSelector).find("#" + responseTimeoutDialog.countdownContainerId).html(Math.max(n, 0))
 }
+
 function clearTimers() {
     try {
         clearTimeout(countdownDialogTimer), clearTimeout(responseTimer), clearTimeout(masterTimer), clearInterval(countdownIntervalHandle), responseTimer = null
     } catch (n) {}
 }
+
 function closeAllDialogs() {
     $(".adplay-popup-dialogue").hide()
 }
+
 function openDialog(n) {
     closeAllDialogs(), $(n).show()
 }
+
 function showTimeoutDialog() {
     initTimeoutDialog(), openDialog(timeoutDialogSelector), countdownIntervalHandle = setInterval("timeoutCountdown();", 1e3)
 }
+
 function showVideoEndedDialog() {
     $(videoEndedDialogSelector).find(".popup").length == 0 ? getPartialView("/Home/GetVideoEndedView", null, function (n) {
         $(videoEndedDialogSelector).html(n), initVideoEndedDialog(), openDialog(videoEndedDialogSelector)
     }) : (initVideoEndedDialog(), openDialog(videoEndedDialogSelector))
 }
+
 function showRateDialog() {
     $(rateDialogSelector).find(".popup").length == 0 ? getPartialView("/Home/GetRateView", null, function (n) {
         $(rateDialogSelector).html(n), initRateDialog(), openDialog(rateDialogSelector)
     }) : (initRateDialog(), openDialog(rateDialogSelector))
 }
+
 function showShareDialog() {
     $(shareDialogSelector).find(".popup").length == 0 ? getPartialView("/Home/GetShareView", null, function (n) {
         $(shareDialogSelector).html(n), initShareDialog(), openDialog(shareDialogSelector)
     }) : (initShareDialog(), openDialog(shareDialogSelector))
 }
+
 function showShareViaFacebookDialog() {
     $(shareViaFacebookDialogSelector).find(".popup").length == 0 ? getPartialView("/SocialMedia/GetShareViaFacebookView", null, function (n) {
         $(shareViaFacebookDialogSelector).html(n), initShareFacebookDialog(), openDialog(shareViaFacebookDialogSelector)
     }) : (initShareFacebookDialog(), openDialog(shareViaFacebookDialogSelector))
 }
+
 function showShareViaTwitterDialog() {
     $(shareViaTwitterDialogSelector).find(".popup").length == 0 ? getPartialView("/SocialMedia/GetShareViaTwitterView", null, function (n) {
         $(shareViaTwitterDialogSelector).html(n), initShareTwitterDialog(), openDialog(shareViaTwitterDialogSelector)
     }) : (initShareTwitterDialog(), openDialog(shareViaTwitterDialogSelector))
 }
+
 function showShareViaEmailDialog() {
     $(shareViaEmailDialogSelector).find(".popup").length == 0 ? getPartialView("/Home/GetShareViaEmailView", null, function (n) {
         $(shareViaEmailDialogSelector).html(n), shareMailDialog.initialize(abm.getAdBlockId()), initShareMailDialog(), openDialog(shareViaEmailDialogSelector)
     }) : (shareMailDialog.initialize(abm.getAdBlockId()), initShareMailDialog(), openDialog(shareViaEmailDialogSelector)), $(".green-bt").focus()
 }
+
 function showSessionEndedDialog(n, t) {
     var i = {
         sessionCompleted: n
@@ -209,11 +235,13 @@ function showSessionEndedDialog(n, t) {
         $(sessionEndedDialogSelector).html(n), initSessionEndedDialog(t), openDialog(sessionEndedDialogSelector)
     })
 }
+
 function showCaptchaDialog() {
     $(captchaDialogSelector).find(".popup").length == 0 ? getPartialView("/Home/GetCaptchaView", null, function (n) {
         $(captchaDialogSelector).html(n), initCaptchaDialog(), openDialog(captchaDialogSelector)
     }) : (initCaptchaDialog(), openDialog(captchaDialogSelector))
 }
+
 function initVideoEndedDialog() {
     var n = abm.isCampaignRatingAvailable(),
         t = abm.isCampaignSharingEnabled(),
@@ -230,11 +258,13 @@ function initVideoEndedDialog() {
         clearTimeout(countdownDialogTimer), clearTimeout(responseTimer), $f().stop(), $f().play(), $f().pause(), replayScreen = !0, closeAllDialogs(), $f().getPlay().show()
     })
 }
+
 function initRateDialog() {
     rateDialog.nextClick == null && (rateDialog.nextClick = function () {
         showVideoEndedDialog(), abm.rateAd(rateDialog.getStars(), rateDialog.getSelectedOptions(), rateDialog.getComments())
     })
 }
+
 function initShareDialog() {
     adPlayShareDialog.closeClick == null && (adPlayShareDialog.closeClick = function () {
         showVideoEndedDialog()
@@ -246,6 +276,7 @@ function initShareDialog() {
         showShareViaEmailDialog()
     })
 }
+
 function initShareFacebookDialog() {
     facebookShareView.closeClick = function () {
         ClosefacebookShareView(), openDialog(shareDialogSelector)
@@ -253,6 +284,7 @@ function initShareFacebookDialog() {
         ClosefacebookShareView(), showVideoEndedDialog()
     }
 }
+
 function initShareTwitterDialog() {
     twitterShareView.closeClick = function () {
         ClosetwitterShareView(), openDialog(shareDialogSelector)
@@ -260,6 +292,7 @@ function initShareTwitterDialog() {
         ClosetwitterShareView(), showVideoEndedDialog()
     }
 }
+
 function initShareMailDialog() {
     shareMailDialog.closeClick == null && (shareMailDialog.closeClick = function () {
         showShareDialog()
@@ -267,21 +300,25 @@ function initShareMailDialog() {
         showVideoEndedDialog()
     })
 }
+
 function initSessionEndedDialog(n) {
     sessionEndedDialog.initialize(n), sessionEndedDialog.doneClick == null && (sessionEndedDialog.doneClick = function () {
         abm.getVisitWebsiteFlag() && $.trim(abm.getCampaignWebLink()) != "" && (setEovendoTrackingCookie(), window.open(abm.getCampaignWebLink(), "_blank")), $("#hdnIsUserProfileComplete").val().toLowerCase() == "false" ? window.location.href = sessionEndRediectPath : (exitFullwindowPlayer(), resetPlayer(), closeAllDialogs(), window.adPlayCompleted && window.adPlayCompleted())
     })
 }
+
 function initTimeoutDialog() {
     responseTimeoutDialog.backClick == null && (responseTimeoutDialog.backClick = function () {
         clearTimeout(responseTimer), clearInterval(countdownIntervalHandle), showVideoEndedDialog()
     })
 }
+
 function initCaptchaDialog() {
     captchaDialog.onValidated == null && (captchaDialog.onValidated = function () {
         endSession(sessionStatus.completed, captchaDialog)
     })
 }
+
 function getPartialView(n, t, i, r) {
     $.get(n, t).done(function (n) {
         i(n)
@@ -289,138 +326,145 @@ function getPartialView(n, t, i, r) {
         r && r(i)
     })
 }
+
 function verifyCampaignIsViewed() {
     try {
         campaignViewed == !1 && (abm.updateCampaignIsViewed(!0), updateTracking(), campaignViewed = !0)
     } catch (n) {}
 }
+
 function updateTracking() {
     var n = abm.getCampaignImpressionLink();
     n && n.trim() != "" && $(iframTrackingSelector).attr("src", n)
 }
+
 function setEovendoTrackingCookie() {
     try {
         document.cookie = "eovendotracking=true; domain=.eovendo.com;"
     } catch (n) {}
 }
+
 function checkAdStatus() {
     window.console && console.log("[" + (new Date).toLocaleTimeString() + "] Checking ad status..."), $.ajax({
         type: "GET",
         url: "/Home/GetUserAdInfo",
-        dataType: "json"
+        dataType: "json",
+        cache: !1
     }).done(function (n) {
         window.console && console.log(n), n.TotalAds - n.WatchedAds > 0 && n.MatchingAdsAvailable ? (adsAvailable = !0, $(playerSelector).is(":hidden") && (showPlayer(), setStatusCheckInterval(statusCheckLongInterval))) : (adsAvailable = !1, $(playerSelector).is(":hidden") || (hidePlayer(), setStatusCheckInterval(statusCheckShortInterval))), $("#spnWatchedAds").html(n.WatchedAds), $("#spnTotalAds").html(n.TotalAds)
     }).fail(function (n) {
         window.console && console.log(n)
     })
 }
+
 function setStatusCheckInterval(n) {
     clearInterval(statusCheckIntervalHandler), statusCheckIntervalHandler = setInterval("checkAdStatus()", n)
 }
+
 function getUserAgent() {
     var n = navigator.userAgent.toLowerCase(),
         t = new RegExp("^(?=.*\\bmacintosh\\b)(?=.*\\bfirefox\\b).+", "gi");
     return t.test(n) ? browserType.FirefoxOnMac : browserType.unidentified
 }
 var AdBlockManager = function (n, t) {
-        function r(n, t) {
-            getAdBlock(function (t) {
-                i = t, window.console && console.log(t), n(t != null && t != undefined)
-            }, function (n) {
-                t && t(n)
-            })
+    function r(n, t) {
+        getAdBlock(function (t) {
+            i = t, window.console && console.log(t), n(t != null && t != undefined)
+        }, function (n) {
+            t && t(n)
+        })
+    }
+    var i;
+    return getAdBlock = function (n, t) {
+        $.ajax({
+            type: "GET",
+            url: "/api/adblockapi",
+            dataType: "json"
+        }).done(function (t) {
+            n(t)
+        }).fail(function (n) {
+            t(n)
+        })
+    }, this.rateAd = function (n, t, r) {
+        var f, u;
+        if (i.Campaign.Rating) {
+            for (f = [], u = 0; u < t.length; u++) f.push({
+                value: t[u]
+            });
+            i.Campaign.Rating.Stars = n, i.Campaign.Rating.SelectedOptions = f, i.Campaign.Rating.Comments = r
         }
-        var i;
-        return getAdBlock = function (n, t) {
-            $.ajax({
-                type: "GET",
-                url: "/api/adblockapi",
-                dataType: "json"
-            }).done(function (t) {
-                n(t)
-            }).fail(function (n) {
-                t(n)
-            })
-        }, this.rateAd = function (n, t, r) {
-            var f, u;
-            if (i.Campaign.Rating) {
-                for (f = [], u = 0; u < t.length; u++) f.push({
-                    value: t[u]
-                });
-                i.Campaign.Rating.Stars = n, i.Campaign.Rating.SelectedOptions = f, i.Campaign.Rating.Comments = r
-            }
-        }, this.reportAd = function (n, t) {
-            i.Campaign.Report.Reason = {
-                value: n
-            }, i.Campaign.Report.Comments = t
-        }, this.postAdBlock = function (n, t) {
-            window.console && console.log(i), $.ajax({
-                type: "POST",
-                url: "/api/adblockapi",
-                data: JSON.stringify(i),
-                contentType: "application/json",
-                dataType: "json"
-            }).done(function (t) {
-                n && n(t)
-            }).fail(function (n) {
-                t && t(n)
-            })
-        }, this.getAdBlockId = function () {
-            return i.Id
-        }, this.getCampaignMediaUrl = function () {
-            return i.Campaign.MediaUrl
-        }, this.getCampaignMediaType = function () {
-            return i.Campaign.MediaType
-        }, this.getCampaignMediaDuration = function () {
-            return i.Campaign.MediaDuration
-        }, this.getCampaignWebLink = function () {
-            return i.Campaign.WebLink
-        }, this.getCampaignImpressionLink = function () {
-            return i.Campaign.ImpressionLink
-        }, this.getRequestTime = function () {
-            return i.RequestTime
-        }, this.getResponseTimeout = function () {
-            return i.Settings.ResponseTimeout
-        }, this.getResponseTimeoutCountdownTime = function () {
-            return i.Settings.ResponseTimeoutCountdownTime
-        }, this.getMasterTimeout = function () {
-            return i.Settings.MasterTimeout
-        }, this.getIsViewedPercentage = function () {
-            return i.Settings.IsViewedPercentage
-        }, this.getVisitWebsiteFlag = function () {
-            return i.Campaign.WebLinkClicked
-        }, this.isCampaignRatingAvailable = function () {
-            return i.Campaign.Rating !== null && i.Campaign.Rating !== undefined
-        }, this.isCampaignSharingEnabled = function () {
-            return i.Campaign.SharingEnabled
-        }, this.isFirstAd = function () {
-            return i.Settings.IsFirst
-        }, this.displayCaptcha = function () {
-            return i.Settings.DisplayCaptcha
-        }, this.updateCampaignIsViewed = function (n) {
-            i.Campaign.IsViewed = n
-        }, this.updateStatus = function (n) {
-            i.AdStatus = {
-                value: n
-            }, i.EndTime = (new Date).toISOString()
-        }, this.updateStartTime = function () {
-            try {
-                i.StartTime == null && i.Campaign.StartTime == null && (i.StartTime = i.Campaign.StartTime = (new Date).toISOString())
-            } catch (n) {}
-        }, this.updateCampaignEndTime = function () {
-            try {
-                i.Campaign.EndTime == null && (i.Campaign.EndTime = (new Date).toISOString())
-            } catch (n) {}
-        }, this.toggleVisitWebsiteFlag = function () {
-            i.Campaign.WebLinkClicked = !i.Campaign.WebLinkClicked
-        }, r(n, t)
-    },
-    abm, countdownIntervalHandle, responseTimer, countdownDialogTimer, masterTimer, adsAvailable = !0,
+    }, this.reportAd = function (n, t) {
+        i.Campaign.Report.Reason = {
+            value: n
+        }, i.Campaign.Report.Comments = t
+    }, this.postAdBlock = function (n, t) {
+        window.console && console.log(i), $.ajax({
+            type: "POST",
+            url: "/api/adblockapi",
+            data: JSON.stringify(i),
+            contentType: "application/json",
+            dataType: "json"
+        }).done(function (t) {
+            n && n(t)
+        }).fail(function (n) {
+            t && t(n)
+        })
+    }, this.getAdBlockId = function () {
+        return i.Id
+    }, this.getCampaignMediaUrl = function () {
+        return i.Campaign.MediaUrl
+    }, this.getCampaignMediaType = function () {
+        return i.Campaign.MediaType
+    }, this.getCampaignMediaDuration = function () {
+        return i.Campaign.MediaDuration
+    }, this.getCampaignWebLink = function () {
+        return i.Campaign.WebLink
+    }, this.getCampaignImpressionLink = function () {
+        return i.Campaign.ImpressionLink
+    }, this.getRequestTime = function () {
+        return i.RequestTime
+    }, this.getResponseTimeout = function () {
+        return i.Settings.ResponseTimeout
+    }, this.getResponseTimeoutCountdownTime = function () {
+        return i.Settings.ResponseTimeoutCountdownTime
+    }, this.getMasterTimeout = function () {
+        return i.Settings.MasterTimeout
+    }, this.getIsViewedPercentage = function () {
+        return i.Settings.IsViewedPercentage
+    }, this.getVisitWebsiteFlag = function () {
+        return i.Campaign.WebLinkClicked
+    }, this.isCampaignRatingAvailable = function () {
+        return i.Campaign.Rating !== null && i.Campaign.Rating !== undefined
+    }, this.isCampaignSharingEnabled = function () {
+        return i.Campaign.SharingEnabled
+    }, this.isFirstAd = function () {
+        return i.Settings.IsFirst
+    }, this.displayCaptcha = function () {
+        return i.Settings.DisplayCaptcha
+    }, this.updateCampaignIsViewed = function (n) {
+        i.Campaign.IsViewed = n
+    }, this.updateStatus = function (n) {
+        i.AdStatus = {
+            value: n
+        }, i.EndTime = (new Date).toISOString()
+    }, this.updateStartTime = function () {
+        try {
+            i.StartTime == null && i.Campaign.StartTime == null && (i.StartTime = i.Campaign.StartTime = (new Date).toISOString())
+        } catch (n) {}
+    }, this.updateCampaignEndTime = function () {
+        try {
+            i.Campaign.EndTime == null && (i.Campaign.EndTime = (new Date).toISOString())
+        } catch (n) {}
+    }, this.toggleVisitWebsiteFlag = function () {
+        i.Campaign.WebLinkClicked = !i.Campaign.WebLinkClicked
+    }, r(n, t)
+}, abm, countdownIntervalHandle, responseTimer, countdownDialogTimer, masterTimer, adsAvailable = !0,
     campaignViewed = !1,
     replayScreen = !1,
     autoplay = !1,
     requiredFlashVersion = "10.1",
     playerSelector = "#player",
+    scratchCard = "#ScratchCard",
     overlaySelector = ".adplay-overlay",
     videoEndedDialogSelector = "#videoEndedDialog",
     rateDialogSelector = "#rateDialog",
@@ -439,8 +483,7 @@ var AdBlockManager = function (n, t) {
         interrupted: "Interrupted",
         timedOut: "Timedout",
         cancelled: "Cancelled"
-    },
-    sessionEndRediectPath = "/UserData",
+    }, sessionEndRediectPath = "/UserData",
     homeRedirectPath = "/Home",
     statusCheckShortInterval, statusCheckLongInterval, statusCheckIntervalHandler, browserType;
 $(function () {
