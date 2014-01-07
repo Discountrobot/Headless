@@ -25,7 +25,7 @@ home = function() {
       document.dispatchEvent(new Event('adPlayCompletedEvent'));
     };
 
-    this.run = function() {
+    this.watch = function() {
      
       $.ajax({
         type: "GET",
@@ -97,7 +97,16 @@ home = function() {
       });
     };
 
-    this.run();
+    this.scrach = function() {
+      // ಠ_ಠ
+      $("#eo-game .eo-card").each(function () {
+          var b = $(this),
+              c = b.data("cardId");
+          console.log(eo.scratchCompleteHandler.scratchComplete(c, b.index()))
+      });     
+    }
+
+    this.watch();
 
   };
 
@@ -149,7 +158,7 @@ home = function() {
     'float': 'left'
   });
 
-  var currentVersion = 'pag__PH1OvUU4OQqdUvv6vbm8Mv2Mnnjko3WFPB7J141',
+  var currentVersion = 'mlNpjQDx8JDiEpZ_ZPvBADDKX5gF-7V11MKj16ZgOpk1',
       version = $('script[src*="adplay"]').prop('src'),
       v = version.indexOf('v=');
       version = version.substr(v + 2, version.length);
