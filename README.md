@@ -56,8 +56,10 @@ if (
 ```
 
 ### Installation
+
 #### Chrome Extension
 read more here: [`chrome extension`](chrome extension)
+
 #### Phantomjs bot
 read more here: [`headless.js`](headless)
 
