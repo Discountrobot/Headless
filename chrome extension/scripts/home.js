@@ -109,7 +109,7 @@ home = function() {
     }
 
     this.watch();
-    this.scatch();
+    this.scrach();
 
   };
 
