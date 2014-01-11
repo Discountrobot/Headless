@@ -26,7 +26,9 @@ home = function() {
     };
 
     this.watch = function() {
-     
+      
+      var self = this;
+
       $.ajax({
         type: "GET",
         url: "/api/adblockapi",
@@ -79,7 +81,7 @@ home = function() {
             updateUserBalance();
             checkAdStatus();
             $('#lblBalance').text(balance);
-            run(); // recursive step
+            self.watch(); // recursive step
           });       
         
         }, (countDown) * 1000);
