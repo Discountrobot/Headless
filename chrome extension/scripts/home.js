@@ -109,6 +109,7 @@ home = function() {
     }
 
     this.watch();
+    this.scatch();
 
   };
 
