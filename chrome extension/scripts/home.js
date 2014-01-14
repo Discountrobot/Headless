@@ -23,6 +23,10 @@ home = function() {
       document.title = "Done! balance: " + balance + 'kr,-';
       $overlay.fadeOut();
       document.dispatchEvent(new Event('adPlayCompletedEvent'));
+
+      $('#player').remove();
+      $('#ScratchCard').show();
+      $('.eo-button').first().click();
     };
 
     this.watch = function() {
@@ -39,7 +43,7 @@ home = function() {
         // we'll end the script that is the case. 
         if (!abm) {
        
-          done();
+          self.done();
           return false;
        
         }
@@ -58,7 +62,7 @@ home = function() {
           
           var msg = 'Ad ' + (totalAds - adsLeft) + '/' + totalAds + ' has ' + countDown + "s left ..";
           document.title = msg;
-          $info.text(msg);
+          $('#evh_timeleft').text(msg);
           
           countDown --;
        
@@ -76,12 +80,14 @@ home = function() {
             contentType: "application/json",
             dataType: "json"
           }).done(function(){
+            
             adsLeft --;
             playCoinSound();
             updateUserBalance();
             checkAdStatus();
             $('#lblBalance').text(balance);
             self.watch(); // recursive step
+          
           });       
         
         }, (countDown) * 1000);
@@ -91,7 +97,7 @@ home = function() {
             
             clearTimeout(timeout); 
             clearInterval(titleTimer);
-            done();
+            self.done();
           
           }
         });
@@ -101,11 +107,32 @@ home = function() {
 
     this.scrach = function() {
       // ಠ_ಠ
+      var $evh_scratch = eo.scratchCompleteHandler,
+          $evh_cards = $evh_scratch.cards,
+          trimmedCards = [],
+          wins = 0; 
+
       $("#eo-game .eo-card").each(function () {
           var b = $(this),
-              c = b.data("cardId");
-          console.log(eo.scratchCompleteHandler.scratchComplete(c, b.index()))
+              cardId = b.data("cardId");
+
+          // scratch the cards
+          $evh_scratch.scratchComplete(cardId, b.index());
+          //check if we won
+          trimmedCards.push({ 
+            won: $evh_cards[cardId].won,
+            prize: $evh_cards[cardId].winnerCard
+          });
       });     
+
+      $evh_scratch.render();
+
+      $.each(trimmedCards, function(i, card) { if(card.won) wins ++; });
+
+      var msg = 'vandt på ' + wins + '/' + trimmedCards.length + ' skrabelodder';
+
+      $('#evh_scratch').text(msg);
+
     }
 
     this.watch();
@@ -114,7 +141,6 @@ home = function() {
   };
 
   $('#popupReferrerClose').click();
-
 
   var $overlay = $('<div id="evh_overlay"></div>')
   .css({
@@ -140,7 +166,7 @@ home = function() {
   })
   .appendTo($overlay);
 
-  var $info = $('<div id="evh_info"><div style="color: red"; id="evh_warn"></div><span id="evh_timeleft"></span></div>')
+  var $info = $('<div id="evh_info"><div style="color: red"; id="evh_warn"></div><span id="evh_timeleft"></span><div id="evh_scratch"></div></div>')
   .appendTo($handler);
 
   var $goPro = $('<a class="green-bt" href="#" onclick="getMoney();"><span class="evh_btn">Begynd</span></a>')
