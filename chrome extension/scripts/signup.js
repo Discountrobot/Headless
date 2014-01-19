@@ -12,7 +12,6 @@ signup = function() {
       data: { "EmailAddress": email }
     }).done(function(data){ 
       if (data !== true) {
-        console.log(email);
         location.reload();
       } else { console.log('email is fine'); }
     });

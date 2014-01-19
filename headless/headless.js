@@ -485,16 +485,35 @@ function handleHome () {
 
     function initScratch() {
       // ಠ_ಠ
+      var evh_eo = eo.scratchCompleteHandler,
+          wins = 0;
+
       $("#eo-game .eo-card").each(function () {
           var b = $(this),
               c = b.data("cardId");
-          console.log(eo.scratchCompleteHandler.scratchComplete(c, b.index()))
-      });      
+          
+          if(!evh_eo.cards) {
+            setTimeout(initScratch, 3000);
+            return false;
+          }
+
+          if (evh_eo.cards[c].won) { wins ++; }
+
+          evh_eo.scratchComplete(c, b.index());
+      });
+
+      if(evh_eo.cards) {
+        callHome({
+          handle: 'log', 
+          msg: 'vandt på ' + wins + ' skrabelodder'
+        });      
+      }
+
     }
 
     resetPlayer = function() {};
-    initWhirler();
     initScratch();
+    initWhirler();
 
   });
 
