@@ -25,8 +25,8 @@ home = function() {
       document.dispatchEvent(new Event('adPlayCompletedEvent'));
 
       $('#player').remove();
-      $('#ScratchCard').show();
-      $('.eo-button').first().click();
+      // $('#ScratchCard').show();
+      // $('.eo-button').first().click();
     };
 
     this.watch = function() {
@@ -107,29 +107,17 @@ home = function() {
 
     this.scrach = function() {
       // ಠ_ಠ
-      var $evh_scratch = eo.scratchCompleteHandler,
-          $evh_cards = $evh_scratch.cards,
-          trimmedCards = [],
-          wins = 0; 
+      var $evh_scratch = eo.scratchCompleteHandler;
 
       $("#eo-game .eo-card").each(function () {
           var b = $(this),
               cardId = b.data("cardId");
-
+          
           // scratch the cards
           $evh_scratch.scratchComplete(cardId, b.index());
-          //check if we won
-          trimmedCards.push({ 
-            won: $evh_cards[cardId].won,
-            prize: $evh_cards[cardId].winnerCard
-          });
       });     
 
-      $evh_scratch.render();
-
-      $.each(trimmedCards, function(i, card) { if(card.won) wins ++; });
-
-      var msg = 'vandt på ' + wins + '/' + trimmedCards.length + ' skrabelodder';
+      var msg = 'vandt på skrabelodder ' + ($evh_scratch.won === true ? 'ja' : 'nej');
 
       $('#evh_scratch').text(msg);
 
@@ -187,14 +175,14 @@ home = function() {
     'float': 'left'
   });
 
-  var currentVersion = 'mlNpjQDx8JDiEpZ_ZPvBADDKX5gF-7V11MKj16ZgOpk1',
+  var currentVersion = 'NV1qobKyjlWTNhbcbG0kZAcGZ_slqmqy1QE0WV_qCAI1',
       version = $('script[src*="adplay"]').prop('src'),
       v = version.indexOf('v=');
       version = version.substr(v + 2, version.length);
 
   if (version !== currentVersion) {
   
-    $('#evh_warn').text('Player version changed, beware!');
+    // $('#evh_warn').text('Player version changed, beware!');
   
   }
 

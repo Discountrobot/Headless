@@ -328,7 +328,7 @@ function handleHome () {
 
     (function checkVersion() {
 
-      var currentVersion = 'mlNpjQDx8JDiEpZ_ZPvBADDKX5gF-7V11MKj16ZgOpk1',
+      var currentVersion = 'NV1qobKyjlWTNhbcbG0kZAcGZ_slqmqy1QE0WV_qCAI1',
         version = $('script[src*="adplay"]').prop('src'),
         v = version.indexOf('v=');
         version = version.substr(v + 2, version.length);
@@ -485,29 +485,29 @@ function handleHome () {
 
     function initScratch() {
       // ಠ_ಠ
-      var evh_eo = eo.scratchCompleteHandler,
-          wins = 0;
+      var $evh_scratch = eo.scratchCompleteHandler;
 
       $("#eo-game .eo-card").each(function () {
           var b = $(this),
-              c = b.data("cardId");
-          
-          if(!evh_eo.cards) {
-            setTimeout(initScratch, 3000);
+              cardId = b.data("cardId");
+
+          // if the card is present it isn't scratched
+          // we terminate the loop if the card isn't present
+          if(
+            !eo.cardHandler.cards || 
+            !eo.cardHandler.cards.hasOwnProperty(cardId)
+          ) {
             return false;
           }
 
-          if (evh_eo.cards[c].won) { wins ++; }
+          // scratch the cards
+          $evh_scratch.scratchComplete(cardId, b.index());
+      });     
 
-          evh_eo.scratchComplete(c, b.index());
-      });
-
-      if(evh_eo.cards) {
-        callHome({
-          handle: 'log', 
-          msg: 'vandt på ' + wins + ' skrabelodder'
-        });      
-      }
+      callHome({
+        handle: 'log', 
+        msg: 'won on scratchcards : ' + (eo.won === true ? 'yes' : 'no')
+      });      
 
     }
 

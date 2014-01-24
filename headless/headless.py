@@ -12,7 +12,7 @@ class Headless:
   }
 
   headless_path = os.path.join(dir_path, 'headless.js')
-  logins_path   = os.path.join(dir_path, 'json/logins_template.json')
+  logins_path   = os.path.join(dir_path, 'json/logins.json')
   proxies_path  = os.path.join(dir_path, 'json/proxies.json')
   log_path      = os.path.join(dir_path, 'logs/events.txt')
 
@@ -27,7 +27,7 @@ class Headless:
 
     # set worker amount if specified
     try:
-      worker_amount = int(sys.argv[1])
+      self.worker_amount = int(sys.argv[1])
     except Exception, e:
       print "no worker amount specified assuming 1"
 
@@ -131,7 +131,7 @@ class Headless:
       outfile.write("Ran {0}".format(date))
 
   def run(self):
-    for i in range(1): # create n threads 
+    for i in range(self.worker_amount): # create n threads 
       worker = threading.Thread(target = self._automate)
       worker.daemon = True
       worker.start()
